@@ -1,13 +1,6 @@
-/* Write your T-SQL query statement below */
-
-
-select Id 
-from (
-        select Id, recordDate, temperature,
-               LAG(temperature) over (order by recordDate) as prev_temp,
-               LAG(recordDate) over (order by recordDate) as prev_date
-        from weather
-) t
-where prev_temp is not null 
-   and prev_date = DATEADD(day,-1,recordDate)
-   and temperature > prev_temp ;
+# Write your MySQL query statement below
+with tem as (
+select id, recordDate, temperature, lag(temperature) over (order by recorddate) as prev_value, lag(recordDate) over (order by recorddate) as prev_date from weather 
+)
+select id from tem
+where datediff(recorddate, prev_date) = 1  and temperature > prev_value ;
